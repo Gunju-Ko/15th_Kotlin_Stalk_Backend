@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: stalk
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    platform: h2
+    initialization-mode: embedded
+    hikari:
+      validation-timeout: 1000
+      connection-timeout: 1000
+      maximum-pool-size: 10
+  jpa:
+    database: H2
+    show-sql: true
+    open-in-view: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
