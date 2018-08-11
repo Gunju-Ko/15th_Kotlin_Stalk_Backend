@@ -1,4 +1,4 @@
-package slipp.stalk.domain.member;
+package slipp.stalk.domain;
 
 import lombok.Getter;
 import lombok.Setter;
