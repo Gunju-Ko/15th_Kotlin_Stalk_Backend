@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import slipp.stalk.domain.Member;
-import slipp.stalk.repository.MemberRepository;
+import slipp.stalk.infra.jpa.repository.MemberRepository;
 import slipp.stalk.support.DataJpaIntegrationTest;
 import slipp.stalk.support.MemberTestMother;
 

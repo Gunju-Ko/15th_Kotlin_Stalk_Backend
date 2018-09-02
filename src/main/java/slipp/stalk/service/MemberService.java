@@ -2,7 +2,7 @@ package slipp.stalk.service;
 
 import org.springframework.stereotype.Service;
 import slipp.stalk.domain.Member;
-import slipp.stalk.repository.MemberRepository;
+import slipp.stalk.infra.jpa.repository.MemberRepository;
 
 import java.util.Optional;
 
