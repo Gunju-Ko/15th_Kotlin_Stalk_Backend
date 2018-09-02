@@ -24,6 +24,17 @@
 
 ## Run
 
+#### serviceAccountKey.json 파일
+
+어플리케이션을 실행 시키기 위해서는 Firebase Admin SDK 비공개 키가 필요합니다. 비공개키는 github 저장소에 존재하지 않습니다.
+만약 어플리케이션을 실행 시키고자 하신다면, 저에게 연락 주세요.
+
+비공개 키는 /src/main/resources 폴더 밑에 위치해야 하며, serviceAccountKey.json 이름이어야 합니다.
+
+비공개 키가 존재하지 않으면, 어플리케이션 실행시 예외가 발생합니다.
+
+> 비공개 키 파일은 서비스 계정의 비공개 암호화 키와 같은 민감한 정보를 포함합니다. 항상 기밀로 유지하고 공개 저장소에는 저장하지 마세요
+
 #### gradlew
 ```bash
 ./gradlew bootRun 
