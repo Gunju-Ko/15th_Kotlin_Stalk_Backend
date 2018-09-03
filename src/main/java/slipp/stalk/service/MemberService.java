@@ -18,4 +18,8 @@ public class MemberService {
     public Optional<Member> get(long id) {
         return repository.findById(id);
     }
+
+    public void registerToken(long id, String token) {
+        // TODO : implementation
+    }
 }

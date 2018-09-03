@@ -6,6 +6,7 @@ import slipp.stalk.domain.support.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +24,6 @@ public class Member extends AbstractEntity {
 
     @Column(name = "MEMBER_EMAIL")
     private String email;
+
+    private List<Token> tokens;
 }
