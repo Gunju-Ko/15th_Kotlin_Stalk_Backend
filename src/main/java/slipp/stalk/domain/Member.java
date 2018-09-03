@@ -6,6 +6,7 @@ import slipp.stalk.domain.support.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 @Getter
@@ -25,5 +26,6 @@ public class Member extends AbstractEntity {
     @Column(name = "MEMBER_EMAIL")
     private String email;
 
+    @OneToMany(mappedBy = "member")
     private List<Token> tokens;
 }
