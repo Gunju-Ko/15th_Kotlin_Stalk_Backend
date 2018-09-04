@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import slipp.stalk.domain.support.AbstractEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,6 +28,10 @@ public class Member extends AbstractEntity {
     @Column(name = "MEMBER_EMAIL")
     private String email;
 
-    @OneToMany(mappedBy = "member")
-    private List<Token> tokens;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Token> tokens = new ArrayList<>();
+
+    public void addToken(String token) {
+        this.tokens.add(new Token(token, this));
+    }
 }
