@@ -3,6 +3,7 @@ package slipp.stalk.service;
 import org.springframework.stereotype.Service;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
+import slipp.stalk.controller.exceptions.TokenNotFoundException;
 import slipp.stalk.domain.Member;
 import slipp.stalk.domain.Token;
 import slipp.stalk.infra.jpa.repository.MemberRepository;
@@ -30,10 +31,21 @@ public class MemberService {
     @Transactional
     public void registerToken(long id, String token) {
         Member m = get(id).orElseThrow(MemberNotFoundException::new);
-        Token t = tokenRepository.findByValue(token);
-        if (t != null) {
-            throw new TokenAlreadyRegisterException(token);
-        }
+        tokenRepository.findByValue(token)
+                       .ifPresent(t -> {
+                           throw new TokenAlreadyRegisterException(t.getValue());
+                       });
+
         m.addToken(token);
+    }
+
+    @Transactional
+    public void deleteToken(long id, String token) {
+        Member m = get(id).orElseThrow(MemberNotFoundException::new);
+        Token t = tokenRepository.findByValue(token)
+                                 .orElseThrow(() -> new TokenNotFoundException(token));
+        if (!m.deleteToken(t)) {
+            throw new TokenNotFoundException(token);
+        }
     }
 }

@@ -28,10 +28,15 @@ public class Member extends AbstractEntity {
     @Column(name = "MEMBER_EMAIL")
     private String email;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Token> tokens = new ArrayList<>();
 
     public void addToken(String token) {
         this.tokens.add(new Token(token, this));
+    }
+
+    public boolean deleteToken(Token token) {
+        token.setMember(null);
+        return tokens.remove(token);
     }
 }

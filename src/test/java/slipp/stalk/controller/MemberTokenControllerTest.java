@@ -11,11 +11,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import slipp.stalk.controller.dto.TokenDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
+import slipp.stalk.controller.exceptions.TokenNotFoundException;
 import slipp.stalk.service.MemberService;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,6 +95,37 @@ public class MemberTokenControllerTest {
            .andExpect(status().is(409));
 
         verify(memberService).registerToken(memberId, token);
+    }
+
+    @Test
+    public void should_return_204_when_token_is_deleted() throws Exception {
+        String token = "test";
+        long memberId = 1L;
+
+        mvc.perform(delete("/members/{memberId}/token", memberId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body(token)))
+           .andDo(print())
+           .andExpect(status().is(204));
+
+        verify(memberService).deleteToken(memberId, token);
+    }
+
+    @Test
+    public void should_return_404_when_token_is_not_found() throws Exception {
+        String token = "test";
+        long memberId = 1L;
+
+        doThrow(TokenNotFoundException.class)
+            .when(memberService).deleteToken(memberId, token);
+
+        mvc.perform(delete("/members/{memberId}/token", memberId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body(token)))
+           .andDo(print())
+           .andExpect(status().is(404));
+
+        verify(memberService).deleteToken(memberId, token);
     }
 
     private String body(String token) throws JsonProcessingException {
