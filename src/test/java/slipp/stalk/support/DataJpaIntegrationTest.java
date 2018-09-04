@@ -15,6 +15,12 @@ public abstract class DataJpaIntegrationTest {
 
     public <T> T saveTestData(T entity) {
         assert entity != null;
-        return entityManager.persist(entity);
+        T result = entityManager.persist(entity);
+        entityManager.flush();
+        return result;
+    }
+
+    public <T> T find(Class<T> clazz, Object key) {
+        return entityManager.find(clazz, key);
     }
 }
