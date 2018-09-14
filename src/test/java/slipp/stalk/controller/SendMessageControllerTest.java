@@ -9,8 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import slipp.stalk.controller.dto.MessageDto;
+import slipp.stalk.domain.Member;
+import slipp.stalk.service.MemberService;
 import slipp.stalk.service.messaging.SendMessageService;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -20,11 +26,14 @@ public class SendMessageControllerTest {
 
     private MockMvc mvc;
     private SendMessageService sendMessageService;
+    private MemberService memberService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         sendMessageService = Mockito.mock(SendMessageService.class);
-        mvc = MockMvcBuilders.standaloneSetup(new SendMessageController(sendMessageService))
+        memberService = Mockito.mock(MemberService.class);
+
+        mvc = MockMvcBuilders.standaloneSetup(new SendMessageController(sendMessageService, memberService))
                              .setControllerAdvice(new RestApiControllerAdvice())
                              .build();
     }
@@ -33,6 +42,8 @@ public class SendMessageControllerTest {
     public void should_send_message() throws Exception {
         MessageDto message = new MessageDto("메시지 내용");
         long id = 1;
+        doReturn(Optional.of(new Member()))
+            .when(memberService).get(id);
 
         mvc.perform(post(createUrl(id))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -40,7 +51,7 @@ public class SendMessageControllerTest {
            .andDo(print())
            .andExpect(status().is(204));
 
-        verify(sendMessageService).sendMessage(id, message.getMessage());
+        verify(sendMessageService).sendMessages(any(), any(), any());
     }
 
     @Test

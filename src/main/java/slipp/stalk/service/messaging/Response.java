@@ -12,6 +12,10 @@ public class Response {
         this.detailMessage = detailMessage;
     }
 
+    public boolean isFailed() {
+        return result == Result.FAIL;
+    }
+
     public enum Result {
         SUCCESS,
         FAIL
