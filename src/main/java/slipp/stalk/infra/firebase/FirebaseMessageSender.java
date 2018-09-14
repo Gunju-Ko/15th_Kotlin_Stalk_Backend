@@ -6,6 +6,9 @@ import com.google.firebase.messaging.Message;
 import slipp.stalk.service.messaging.MessageSender;
 import slipp.stalk.service.messaging.Response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class FirebaseMessageSender implements MessageSender {
 
     private final boolean dryRun;
@@ -28,5 +31,12 @@ public class FirebaseMessageSender implements MessageSender {
         } catch (FirebaseMessagingException e) {
             return new Response(Response.Result.FAIL, e.getMessage());
         }
+    }
+
+    @Override
+    public List<Response> send(List<Message> messages) {
+        return messages.stream()
+                       .map(this::send)
+                       .collect(Collectors.toList());
     }
 }

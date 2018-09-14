@@ -39,4 +39,9 @@ public class Member extends AbstractEntity {
         token.setMember(null);
         return tokens.remove(token);
     }
+
+    public boolean friendWith(Member from) {
+        // TODO : Implementation
+        return false;
+    }
 }
