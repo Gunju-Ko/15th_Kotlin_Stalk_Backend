@@ -1,6 +1,7 @@
 package slipp.stalk.service;
 
 import org.springframework.stereotype.Service;
+import slipp.stalk.controller.exceptions.MemberIdAlreadyExistException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
@@ -26,6 +27,15 @@ public class MemberService {
 
     public Optional<Member> get(long id) {
         return memberRepository.findById(id);
+    }
+
+    @Transactional
+    public Member create(Member body) {
+        memberRepository.findByMemberId(body.getMemberId())
+                        .ifPresent(t -> {
+                            throw new MemberIdAlreadyExistException(t.getMemberId());
+                        });
+        return memberRepository.save(body);
     }
 
     @Transactional

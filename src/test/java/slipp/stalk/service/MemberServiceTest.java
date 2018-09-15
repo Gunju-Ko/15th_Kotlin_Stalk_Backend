@@ -3,6 +3,7 @@ package slipp.stalk.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import slipp.stalk.controller.exceptions.MemberIdAlreadyExistException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
@@ -110,6 +111,31 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
 
         service.deleteToken(id, token);
         assertThat(memberHasToken(find(Member.class, id), token)).isFalse();
+    }
+
+    @Test
+    public void create__should_throw_MemberIdAlreadyExistException_when_memberId_is_already_exist() throws Exception {
+        Member member = createMember("gunju");
+
+        Throwable t = catchThrowable(() -> service.create(member));
+        assertThat(t).isInstanceOf(MemberIdAlreadyExistException.class);
+    }
+
+    @Test
+    public void create__should_create_new_member() throws Exception {
+        Member member = createMember("slipp");
+
+        Member result = service.create(member);
+        assertThat(result.getMemberId()).isEqualTo(member.getMemberId());
+    }
+
+    private Member createMember(String memberId) {
+        Member member = new Member();
+        member.setMemberId(memberId);
+        member.setPassword("password");
+        member.setName("무명");
+        member.setEmail(memberId + "@naver.com");
+        return member;
     }
 
     private void registerToken(long id, String token) {
