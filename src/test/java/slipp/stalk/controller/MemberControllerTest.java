@@ -1,11 +1,15 @@
 package slipp.stalk.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import slipp.stalk.controller.dto.CreateMemberDto;
 import slipp.stalk.domain.Member;
 import slipp.stalk.service.MemberService;
 
@@ -13,6 +17,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +52,44 @@ public class MemberControllerTest {
         mockMvc.perform(get("/members/" + notExistMemberId))
                .andDo(print())
                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_400_when_email_format_is_not_valid() throws Exception {
+        CreateMemberDto body = mockCreateMemberDto();
+        body.setEmail("wrong email");
+
+        mockMvc.perform(post("/members")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(writeBodyAsString(body)))
+               .andDo(print())
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_return_400_when_memberId_is_too_short() throws Exception {
+        CreateMemberDto body = mockCreateMemberDto();
+        body.setMemberId("ab");
+
+        mockMvc.perform(post("/members")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(writeBodyAsString(body)))
+               .andDo(print())
+               .andExpect(status().isBadRequest());
+    }
+
+    private String writeBodyAsString(Object body) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(body);
+    }
+
+    private CreateMemberDto mockCreateMemberDto() {
+        CreateMemberDto body = new CreateMemberDto();
+        body.setEmail("gunju@slipp.com");
+        body.setMemberId("gunju");
+        body.setName("고건주");
+        body.setPassword("password");
+        return body;
     }
 
     private Optional<Member> mockMember() {

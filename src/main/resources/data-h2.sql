@@ -1,1 +1,1 @@
-INSERT INTO member (id, MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_EMAIL) values (1, 'gunju', 'test', '고건주', 'gunjuko92@gmail.com');
+INSERT INTO member (ID, MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_EMAIL) values ((select next value for hibernate_sequence), 'gunju', 'test', '고건주', 'gunjuko92@gmail.com');
