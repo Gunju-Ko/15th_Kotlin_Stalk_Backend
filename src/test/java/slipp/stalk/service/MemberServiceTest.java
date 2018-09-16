@@ -1,5 +1,6 @@
 package slipp.stalk.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,22 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
 
         Member result = service.create(member);
         assertThat(result.getMemberId()).isEqualTo(member.getMemberId());
+    }
+
+    @Test
+    public void delete_should_remove_member() throws Exception {
+        service.delete(id);
+
+        Member member = find(Member.class, id);
+        assertThat(member).isNull();
+    }
+
+    @Test
+    public void delete_should_throw_MemberNoFoundException_when_member_is_not_exist() throws Exception {
+        long notExistId = id + 100;
+        Throwable t = Assertions.catchThrowable(() -> service.delete(notExistId));
+
+        assertThat(t).isInstanceOf(MemberNotFoundException.class);
     }
 
     private Member createMember(String memberId) {

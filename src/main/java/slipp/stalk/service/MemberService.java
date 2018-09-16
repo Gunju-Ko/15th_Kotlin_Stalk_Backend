@@ -38,6 +38,11 @@ public class MemberService {
         return memberRepository.save(body);
     }
 
+    public void delete(long id) {
+        get(id).orElseThrow(MemberNotFoundException::new);
+        memberRepository.deleteById(id);
+    }
+
     @Transactional
     public void registerToken(long id, String token) {
         Member m = get(id).orElseThrow(MemberNotFoundException::new);

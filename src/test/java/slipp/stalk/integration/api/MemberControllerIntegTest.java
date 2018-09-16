@@ -36,6 +36,8 @@ public class MemberControllerIntegTest {
         assertThat(responseBody.getEmail()).isEqualTo(body.getEmail());
 
         deleteResource(path);
+
+        assertHttpStatusCode(path, HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -54,6 +56,11 @@ public class MemberControllerIntegTest {
     private void deleteResource(String path) {
         ResponseEntity<Void> response = restTemplate.exchange(path, HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    private void assertHttpStatusCode(String path, HttpStatus status) {
+        ResponseEntity<MemberDto> response = restTemplate.getForEntity(path, MemberDto.class);
+        assertThat(response.getStatusCode()).isEqualTo(status);
     }
 
     private CreateMemberDto createBody(String memberId) {
