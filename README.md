@@ -31,21 +31,29 @@
 
 비공개 키는 /src/main/resources 폴더 밑에 위치해야 하며, serviceAccountKey.json 이름이어야 합니다.
 
-비공개 키가 존재하지 않으면, 어플리케이션 실행시 예외가 발생합니다.
+비공개 키가 존재하지 않으면, Firebase을 통해 메시지를 전송할 수 없습니다.
 
 > 비공개 키 파일은 서비스 계정의 비공개 암호화 키와 같은 민감한 정보를 포함합니다. 항상 기밀로 유지하고 공개 저장소에는 저장하지 마세요
 
-#### gradlew
-```bash
+#### Quick Start in MAC
+
+```
+git clone https://github.com/Gunju-Ko/15th_Kotlin_Stalk_Backend.git
+cd 15th_Kotlin_Stalk_Backend
+./gradlew build -x test
 ./gradlew bootRun 
 ```
 
-## Test
+#### Quick Start in Window
 
-#### gradlew
-```bash
-./gradlew test 
 ```
+git clone https://github.com/Gunju-Ko/15th_Kotlin_Stalk_Backend.git
+cd 15th_Kotlin_Stalk_Backend
+gradlew.bat build -x test
+gradlew.bat bootRun
+```
+
+## Test
 
 #### Test API
 
