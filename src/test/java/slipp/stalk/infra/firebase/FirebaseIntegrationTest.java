@@ -8,10 +8,10 @@ import org.junit.Test;
 import slipp.stalk.service.messaging.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static slipp.stalk.infra.firebase.FirebaseConfiguration.RESOURCE_LOCATION;
 
 public class FirebaseIntegrationTest {
 
-    private static final String RESOURCE_LOCATION = "classpath:serviceAccountKey.json";
     private FirebaseMessageSender sender;
 
     @BeforeClass

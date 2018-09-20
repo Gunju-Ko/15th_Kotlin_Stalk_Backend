@@ -3,19 +3,15 @@ package slipp.stalk.infra.firebase;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 class FirebaseInitializer {
     FirebaseApp initialize(String resourceLocation) throws IOException {
-        File file = ResourceUtils.getFile(resourceLocation);
-        FileInputStream serviceAccount = new FileInputStream(file);
-
+        ClassPathResource classPathResource = new ClassPathResource(resourceLocation);
         FirebaseOptions options = new FirebaseOptions.Builder()
-            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setCredentials(GoogleCredentials.fromStream(classPathResource.getInputStream()))
             .build();
 
         return FirebaseApp.initializeApp(options);

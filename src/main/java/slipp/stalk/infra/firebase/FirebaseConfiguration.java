@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Configuration
 public class FirebaseConfiguration {
 
-    private static final String RESOURCE_LOCATION = "classpath:serviceAccountKey.json";
+    static final String RESOURCE_LOCATION = "serviceAccountKey.json";
 
     @Bean
     public MessageSender messageSender() {
