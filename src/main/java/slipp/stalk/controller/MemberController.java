@@ -38,9 +38,9 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CreateMemberDto body) {
+    public ResponseEntity<MemberDto> create(@RequestBody @Valid CreateMemberDto body) {
         MemberDto member = mapToMemberDto(memberService.create(mapToMember(body)));
-        return new ResponseEntity<>(member.makeHttpHeaders(), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(member, member.makeHttpHeaders(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

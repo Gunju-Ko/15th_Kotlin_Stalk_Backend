@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import slipp.stalk.controller.exceptions.MemberIdAlreadyExistException;
+import slipp.stalk.controller.exceptions.MemberEmailAlreadyExistException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
@@ -44,7 +44,7 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
     public void get__return_member_when_member_is_exist() {
         Optional<Member> member = service.get(id);
         assertThat(member.isPresent()).isTrue();
-        assertThat(member.get().getMemberId()).isEqualTo("gunju");
+        assertThat(member.get().getName()).isEqualTo("고건주");
     }
 
     @Test
@@ -87,7 +87,6 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
 
         long newId = saveTestData(MemberTestMother.memberBuilder()
                                                   .email("gunjuko@gmail.com")
-                                                  .memberId("new member")
                                                   .name("gunju ko")
                                                   .password("test")
                                                   .build()).getId();
@@ -116,18 +115,18 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
 
     @Test
     public void create__should_throw_MemberIdAlreadyExistException_when_memberId_is_already_exist() throws Exception {
-        Member member = createMember("gunju");
+        Member member = createMember("gunjuko92@gmail.com");
 
         Throwable t = catchThrowable(() -> service.create(member));
-        assertThat(t).isInstanceOf(MemberIdAlreadyExistException.class);
+        assertThat(t).isInstanceOf(MemberEmailAlreadyExistException.class);
     }
 
     @Test
     public void create__should_create_new_member() throws Exception {
-        Member member = createMember("slipp");
+        Member member = createMember("gunju@slipp.com");
 
         Member result = service.create(member);
-        assertThat(result.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(result.getEmail()).isEqualTo(member.getEmail());
     }
 
     @Test
@@ -146,12 +145,11 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
         assertThat(t).isInstanceOf(MemberNotFoundException.class);
     }
 
-    private Member createMember(String memberId) {
+    private Member createMember(String email) {
         Member member = new Member();
-        member.setMemberId(memberId);
         member.setPassword("password");
         member.setName("무명");
-        member.setEmail(memberId + "@naver.com");
+        member.setEmail(email);
         return member;
     }
 

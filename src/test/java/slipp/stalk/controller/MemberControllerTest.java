@@ -66,18 +66,6 @@ public class MemberControllerTest {
                .andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void should_return_400_when_memberId_is_too_short() throws Exception {
-        CreateMemberDto body = mockCreateMemberDto();
-        body.setMemberId("ab");
-
-        mockMvc.perform(post("/members")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(writeBodyAsString(body)))
-               .andDo(print())
-               .andExpect(status().isBadRequest());
-    }
-
     private String writeBodyAsString(Object body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(body);
@@ -86,7 +74,6 @@ public class MemberControllerTest {
     private CreateMemberDto mockCreateMemberDto() {
         CreateMemberDto body = new CreateMemberDto();
         body.setEmail("gunju@slipp.com");
-        body.setMemberId("gunju");
         body.setName("고건주");
         body.setPassword("password");
         return body;
@@ -94,7 +81,6 @@ public class MemberControllerTest {
 
     private Optional<Member> mockMember() {
         Member member = new Member();
-        member.setMemberId("test");
         member.setPassword("password");
         member.setName("gunju");
         member.setEmail("gunju@slipp.com");

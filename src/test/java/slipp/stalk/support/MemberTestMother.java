@@ -12,17 +12,11 @@ public class MemberTestMother {
     }
 
     public static class MemberBuilder {
-        private String memberId;
         private String password;
         private String name;
         private String email;
 
         private MemberBuilder() {
-        }
-
-        public MemberBuilder memberId(String memberId) {
-            this.memberId = memberId;
-            return this;
         }
 
         public MemberBuilder password(String password) {
@@ -42,7 +36,6 @@ public class MemberTestMother {
 
         public Member build() {
             Member member = new Member();
-            member.setMemberId(memberId);
             member.setPassword(password);
             member.setName(name);
             member.setEmail(email);

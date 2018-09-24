@@ -23,7 +23,7 @@ public class MemberControllerIntegTest {
 
     @Test
     public void should_create_new_member() throws Exception {
-        CreateMemberDto body = createBody("slipp");
+        CreateMemberDto body = createBody("gunju@slipp.com");
         String path = createResource("/members", body);
 
         ResponseEntity<MemberDto> response = restTemplate.getForEntity(path, MemberDto.class);
@@ -31,7 +31,6 @@ public class MemberControllerIntegTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         MemberDto responseBody = response.getBody();
         assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getMemberId()).isEqualTo(body.getMemberId());
         assertThat(responseBody.getName()).isEqualTo(body.getName());
         assertThat(responseBody.getEmail()).isEqualTo(body.getEmail());
 
@@ -41,15 +40,15 @@ public class MemberControllerIntegTest {
     }
 
     @Test
-    public void should_return_409_when_memberId_isAlready_exist() throws Exception {
-        CreateMemberDto body = createBody("gunju");
+    public void should_return_409_when_email_isAlready_exist() throws Exception {
+        CreateMemberDto body = createBody("gunjuko92@gmail.com");
         ResponseEntity<Void> response = restTemplate.postForEntity("/members", body, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
     private String createResource(String path, Object body) {
         ResponseEntity<Void> response = restTemplate.postForEntity(path, body, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         return response.getHeaders().getLocation().getPath();
     }
 
@@ -63,12 +62,11 @@ public class MemberControllerIntegTest {
         assertThat(response.getStatusCode()).isEqualTo(status);
     }
 
-    private CreateMemberDto createBody(String memberId) {
+    private CreateMemberDto createBody(String email) {
         CreateMemberDto body = new CreateMemberDto();
-        body.setMemberId(memberId);
         body.setPassword("password");
         body.setName("hi");
-        body.setEmail(memberId + "@naver.com");
+        body.setEmail(email);
         return body;
     }
 }

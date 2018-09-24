@@ -7,7 +7,6 @@ import java.net.URI;
 @Data
 public class MemberDto implements UrlGeneratable {
     private long id;
-    private String memberId;
     private String name;
     private String email;
 
