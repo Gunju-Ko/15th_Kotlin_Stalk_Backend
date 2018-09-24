@@ -38,6 +38,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.modelmapper:modelmapper:2.1.0')
     compile('com.google.firebase:firebase-admin:6.2.0')
+    compile('io.jsonwebtoken:jjwt:+')
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+
     runtime('com.h2database:h2')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -73,3 +76,5 @@ jacocoTestReport {
         html.destination file("${buildDir}/reports/jacoco")
     }
 }
+
+compileJava.dependsOn(processResources)

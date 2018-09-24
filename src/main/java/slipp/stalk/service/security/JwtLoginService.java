@@ -10,9 +10,11 @@ import slipp.stalk.infra.jpa.repository.MemberRepository;
 public class JwtLoginService {
 
     private final MemberRepository repository;
+    private final JwtHelper jwtHelper;
 
-    public JwtLoginService(MemberRepository repository) {
+    public JwtLoginService(MemberRepository repository, JwtHelper jwtHelper) {
         this.repository = repository;
+        this.jwtHelper = jwtHelper;
     }
 
     public JwtToken login(String email, String password) {
@@ -29,6 +31,6 @@ public class JwtLoginService {
     }
 
     private JwtToken createJwtTokenFromMember(Member member) {
-        return new JwtToken("test");
+        return jwtHelper.createToken(member);
     }
 }
