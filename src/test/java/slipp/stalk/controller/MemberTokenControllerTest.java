@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import slipp.stalk.controller.dto.TokenDto;
+import slipp.stalk.controller.dto.FireabseTokenDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
@@ -130,6 +130,6 @@ public class MemberTokenControllerTest {
 
     private String body(String token) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(new TokenDto(token));
+        return mapper.writeValueAsString(new FireabseTokenDto(token));
     }
 }

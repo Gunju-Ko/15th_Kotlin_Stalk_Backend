@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import slipp.stalk.controller.dto.TokenDto;
+import slipp.stalk.controller.dto.FireabseTokenDto;
 import slipp.stalk.service.MemberService;
 
 import javax.validation.Valid;
@@ -24,7 +24,7 @@ public class MemberTokenController {
 
     @PostMapping("/token")
     public ResponseEntity<Void> registerToken(@PathVariable long id,
-                                              @RequestBody @Valid TokenDto token) {
+                                              @RequestBody @Valid FireabseTokenDto token) {
         memberService.registerToken(id, token.getToken());
         return ResponseEntity.noContent()
                              .build();
@@ -32,7 +32,7 @@ public class MemberTokenController {
 
     @DeleteMapping("/token")
     public ResponseEntity<Void> deleteToken(@PathVariable long id,
-                                            @RequestBody @Valid TokenDto token) {
+                                            @RequestBody @Valid FireabseTokenDto token) {
         memberService.deleteToken(id, token.getToken());
         return ResponseEntity.noContent()
                              .build();
