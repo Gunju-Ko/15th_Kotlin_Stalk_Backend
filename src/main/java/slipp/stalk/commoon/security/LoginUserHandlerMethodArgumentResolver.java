@@ -6,12 +6,30 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.UnAuthorizedException;
 import slipp.stalk.domain.Member;
+import slipp.stalk.infra.jpa.repository.MemberRepository;
+import slipp.stalk.service.security.JwtHelper;
+import slipp.stalk.service.security.JwtProperties;
 import slipp.stalk.service.security.JwtToken;
+
+import java.util.Optional;
 
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final JwtProperties jwtProperties;
+    private final JwtHelper jwtHelper;
+    private final MemberRepository memberRepository;
+
+    public LoginUserHandlerMethodArgumentResolver(JwtProperties jwtProperties,
+                                                  JwtHelper jwtHelper,
+                                                  MemberRepository memberRepository) {
+        this.jwtProperties = jwtProperties;
+        this.jwtHelper = jwtHelper;
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -35,14 +53,20 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     }
 
     private JwtToken getJwtTokenFromRequest(NativeWebRequest webRequest) {
-        return null;
+        String token = webRequest.getHeader(jwtProperties.getHeader());
+        if (token == null) {
+            return null;
+        }
+        return new JwtToken(token);
     }
 
     private Member getMemberFromJwtToken(JwtToken token) {
-        return null;
+        String email = jwtHelper.parseSubject(token);
+        Optional<Member> member = memberRepository.findByEmail(email);
+        return member.orElseThrow(MemberNotFoundException::new);
     }
 
     private Member defaultUser() {
-        return null;
+        return memberRepository.findById(1L).orElseThrow(MemberNotFoundException::new);
     }
 }

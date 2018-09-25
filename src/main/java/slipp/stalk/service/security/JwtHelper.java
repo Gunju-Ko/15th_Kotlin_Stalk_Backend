@@ -1,5 +1,7 @@
 package slipp.stalk.service.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
@@ -23,5 +25,17 @@ public class JwtHelper {
                            .compact();
 
         return new JwtToken(token);
+    }
+
+    public String parseSubject(JwtToken token) {
+        Claims body = parseClaims(token);
+        return body.getSubject();
+    }
+
+    private Claims parseClaims(JwtToken token) throws JwtException {
+        return Jwts.parser()
+                   .setSigningKey(TextCodec.BASE64.decode(privateKey))
+                   .parseClaimsJws(token.getToken())
+                   .getBody();
     }
 }
