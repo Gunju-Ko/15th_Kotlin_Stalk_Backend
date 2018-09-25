@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MemberTokenControllerIntegTest {
+public class MemberTokenControllerIntegTest extends IntegTest {
 
+    private final String defaultUserEmail = "gunjuko92@gmail.com";
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -28,54 +28,53 @@ public class MemberTokenControllerIntegTest {
     @Test
     public void registerToken() throws Exception {
         FireabseTokenDto token = new FireabseTokenDto("test");
-        long id = 1;
 
-        ResponseEntity<Void> response = restTemplate.postForEntity(createUrl(id), token, Void.class);
+        ResponseEntity<Void> response = exchangeWithJwtToken(defaultUserEmail, createUrl(), HttpMethod.POST, token, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(memberHasToken(id, token)).isTrue();
+        assertThat(memberHasToken(defaultUserEmail, token)).isTrue();
 
-        deleteToken(token, id);
+        deleteToken(token, defaultUserEmail);
 
-        assertThat(memberHasToken(id, token)).isFalse();
+        assertThat(memberHasToken(defaultUserEmail, token)).isFalse();
     }
 
     @Test
     public void registerToken_fail_if_token_already_exist() throws Exception {
         FireabseTokenDto token = new FireabseTokenDto("test");
-        long id = 1;
-        createToken(token, id);
+        createToken(token, defaultUserEmail);
 
-        ResponseEntity<Void> response = restTemplate.postForEntity(createUrl(id), token, Void.class);
+        ResponseEntity<Void> response = exchangeWithJwtToken(defaultUserEmail, createUrl(), HttpMethod.POST, token, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(memberHasToken(id, token)).isTrue();
+        assertThat(memberHasToken(defaultUserEmail, token)).isTrue();
 
-        deleteToken(token, id);
-        assertThat(memberHasToken(id, token)).isFalse();
+        deleteToken(token, defaultUserEmail);
+        assertThat(memberHasToken(defaultUserEmail, token)).isFalse();
     }
 
-    private boolean memberHasToken(long id, FireabseTokenDto token) {
+    private boolean memberHasToken(String email, FireabseTokenDto token) {
         Token t = tokenRepository.findByValue(token.getToken()).orElse(null);
         if (t == null) {
             return false;
         }
-        return t.getMember().getId() == id;
+        return t.getMember().getEmail().equals(email);
     }
 
-    private void createToken(FireabseTokenDto token, long id) {
-        ResponseEntity<Void> response = restTemplate.postForEntity(createUrl(id), token, Void.class);
+    private void createToken(FireabseTokenDto token, String email) {
+        ResponseEntity<Void> response = exchangeWithJwtToken(email, createUrl(), HttpMethod.POST, token, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    private void deleteToken(FireabseTokenDto token, long id) {
-        ResponseEntity<Void> response = restTemplate.exchange(createUrl(id),
-                                                              HttpMethod.DELETE,
-                                                              new HttpEntity<>(token),
-                                                              Void.class);
+    private void deleteToken(FireabseTokenDto token, String email) {
+        ResponseEntity<Void> response = exchangeWithJwtToken(email,
+                                                             createUrl(),
+                                                             HttpMethod.DELETE,
+                                                             token,
+                                                             Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    private String createUrl(long id) {
-        return String.format("/members/%s/token", id);
+    private String createUrl() {
+        return "/members/token";
     }
 
 }

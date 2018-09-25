@@ -12,6 +12,6 @@ public class MemberDto implements UrlGeneratable {
 
     @Override
     public URI generateApiUri() {
-        return URI.create("/members/" + id);
+        return URI.create("/members");
     }
 }

@@ -38,9 +38,9 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_204_when_register_token_is_succeed() throws Exception {
         String token = "test token";
-        long memberId = 1;
+        long memberId = 0;
 
-        mvc.perform(post("/members/{memberId}/token", memberId)
+        mvc.perform(post("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -52,9 +52,9 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_400_when_token_is_empty_string() throws Exception {
         String token = "";
-        long memberId = 1;
+        long memberId = 0;
 
-        mvc.perform(post("/members/{memberId}/token", memberId)
+        mvc.perform(post("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -66,12 +66,12 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_404_when_member_is_not_found() throws Exception {
         String token = "test token";
-        long memberId = 1;
+        long memberId = 0;
 
         doThrow(MemberNotFoundException.class)
             .when(memberService).registerToken(memberId, token);
 
-        mvc.perform(post("/members/{memberId}/token", memberId)
+        mvc.perform(post("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -83,12 +83,12 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_409_when_token_is_already_registered() throws Exception {
         String token = "test token";
-        long memberId = 1;
+        long memberId = 0;
 
         doThrow(TokenAlreadyRegisterException.class)
             .when(memberService).registerToken(memberId, token);
 
-        mvc.perform(post("/members/{memberId}/token", memberId)
+        mvc.perform(post("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -100,9 +100,9 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_204_when_token_is_deleted() throws Exception {
         String token = "test";
-        long memberId = 1L;
+        long memberId = 0L;
 
-        mvc.perform(delete("/members/{memberId}/token", memberId)
+        mvc.perform(delete("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -114,12 +114,12 @@ public class MemberTokenControllerTest {
     @Test
     public void should_return_404_when_token_is_not_found() throws Exception {
         String token = "test";
-        long memberId = 1L;
+        long memberId = 0L;
 
         doThrow(TokenNotFoundException.class)
             .when(memberService).deleteToken(memberId, token);
 
-        mvc.perform(delete("/members/{memberId}/token", memberId)
+        mvc.perform(delete("/members/token", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())

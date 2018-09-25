@@ -16,17 +16,18 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MemberControllerIntegTest {
+public class MemberControllerIntegTest extends IntegTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
     public void should_create_new_member() throws Exception {
-        CreateMemberDto body = createBody("gunju@slipp.com");
+        String email = "gunju@slipp.com";
+        CreateMemberDto body = createBody(email);
         String path = createResource("/members", body);
 
-        ResponseEntity<MemberDto> response = restTemplate.getForEntity(path, MemberDto.class);
+        ResponseEntity<MemberDto> response = exchangeWithJwtToken(email, path, HttpMethod.GET, MemberDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         MemberDto responseBody = response.getBody();
@@ -34,9 +35,9 @@ public class MemberControllerIntegTest {
         assertThat(responseBody.getName()).isEqualTo(body.getName());
         assertThat(responseBody.getEmail()).isEqualTo(body.getEmail());
 
-        deleteResource(path);
+        deleteResource(email, path);
 
-        assertHttpStatusCode(path, HttpStatus.NOT_FOUND);
+        assertHttpStatusCode(email, path, HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -52,13 +53,13 @@ public class MemberControllerIntegTest {
         return response.getHeaders().getLocation().getPath();
     }
 
-    private void deleteResource(String path) {
-        ResponseEntity<Void> response = restTemplate.exchange(path, HttpMethod.DELETE, null, Void.class);
+    private void deleteResource(String email, String path) {
+        ResponseEntity<Void> response = exchangeWithJwtToken(email, path, HttpMethod.DELETE, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    private void assertHttpStatusCode(String path, HttpStatus status) {
-        ResponseEntity<MemberDto> response = restTemplate.getForEntity(path, MemberDto.class);
+    private void assertHttpStatusCode(String email, String path, HttpStatus status) {
+        ResponseEntity<MemberDto> response = exchangeWithJwtToken(email, path, HttpMethod.GET, MemberDto.class);
         assertThat(response.getStatusCode()).isEqualTo(status);
     }
 

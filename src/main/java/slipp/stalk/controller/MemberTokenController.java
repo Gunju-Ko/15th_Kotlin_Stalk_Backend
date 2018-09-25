@@ -2,18 +2,19 @@ package slipp.stalk.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.FireabseTokenDto;
+import slipp.stalk.domain.Member;
 import slipp.stalk.service.MemberService;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/members/{id}")
+@RequestMapping("/members")
 public class MemberTokenController {
 
     private final MemberService memberService;
@@ -23,17 +24,17 @@ public class MemberTokenController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<Void> registerToken(@PathVariable long id,
+    public ResponseEntity<Void> registerToken(@LoginUser Member member,
                                               @RequestBody @Valid FireabseTokenDto token) {
-        memberService.registerToken(id, token.getToken());
+        memberService.registerToken(member.getId(), token.getToken());
         return ResponseEntity.noContent()
                              .build();
     }
 
     @DeleteMapping("/token")
-    public ResponseEntity<Void> deleteToken(@PathVariable long id,
+    public ResponseEntity<Void> deleteToken(@LoginUser Member member,
                                             @RequestBody @Valid FireabseTokenDto token) {
-        memberService.deleteToken(id, token.getToken());
+        memberService.deleteToken(member.getId(), token.getToken());
         return ResponseEntity.noContent()
                              .build();
     }
