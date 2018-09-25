@@ -49,7 +49,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         if (loginUser != null && loginUser.required()) {
             throw new UnAuthorizedException("You're required Login!");
         }
-        return defaultUser();
+        return null;
     }
 
     private JwtToken getJwtTokenFromRequest(NativeWebRequest webRequest) {
@@ -64,9 +64,5 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         String email = jwtHelper.parseSubject(token);
         Optional<Member> member = memberRepository.findByEmail(email);
         return member.orElseThrow(MemberNotFoundException::new);
-    }
-
-    private Member defaultUser() {
-        return memberRepository.findById(1L).orElseThrow(MemberNotFoundException::new);
     }
 }

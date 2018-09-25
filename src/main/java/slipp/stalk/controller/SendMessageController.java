@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.MessageDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.domain.Member;
@@ -28,11 +29,12 @@ public class SendMessageController {
     }
 
     @PostMapping("/message")
-    public ResponseEntity<Void> sendMessage(@PathVariable long id,
+    public ResponseEntity<Void> sendMessage(@LoginUser Member from,
+                                            @PathVariable long id,
                                             @RequestBody @Valid MessageDto message) {
-        Member member = memberService.get(id)
-                                     .orElseThrow(MemberNotFoundException::new);
-        sendMessageService.sendMessages(null, member, message.getMessage());
+        Member to = memberService.get(id)
+                                 .orElseThrow(MemberNotFoundException::new);
+        sendMessageService.sendMessages(from, to, message.getMessage());
 
         return ResponseEntity.noContent()
                              .build();
