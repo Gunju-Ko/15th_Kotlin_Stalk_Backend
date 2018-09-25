@@ -16,7 +16,6 @@ import slipp.stalk.service.MemberService;
 import java.util.Optional;
 
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,21 +36,6 @@ public class MemberControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new MemberController(memberService, new ModelMapper()))
                                  .setControllerAdvice(new RestApiControllerAdvice())
                                  .build();
-    }
-
-    @Test
-    public void should_return_200_when_member_is_exist() throws Exception {
-        mockMvc.perform(get("/members/" + existMemberId))
-               .andDo(print())
-               .andExpect(status().isOk());
-    }
-
-    @Test
-    public void should_return_404_when_member_is_not_exist() throws Exception {
-        long notExistMemberId = 2L;
-        mockMvc.perform(get("/members/" + notExistMemberId))
-               .andDo(print())
-               .andExpect(status().isNotFound());
     }
 
     @Test
