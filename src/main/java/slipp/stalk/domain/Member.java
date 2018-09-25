@@ -38,4 +38,8 @@ public class Member extends AbstractEntity {
         // TODO : Implementation
         return false;
     }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
 }

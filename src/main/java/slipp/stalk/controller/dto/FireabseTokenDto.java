@@ -5,15 +5,15 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class TokenDto {
+public class FireabseTokenDto {
 
     @NotEmpty
     private String token;
 
-    public TokenDto() {
+    public FireabseTokenDto() {
     }
 
-    public TokenDto(String token) {
+    public FireabseTokenDto(String token) {
         this.token = token;
     }
 }

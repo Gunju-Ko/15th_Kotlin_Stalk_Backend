@@ -24,3 +24,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+jwt:
+  private-key: c2VjcmV0LWtleQ==
+  header: Authentication
+  expiration-hour: 24
