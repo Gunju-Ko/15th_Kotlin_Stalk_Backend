@@ -3,8 +3,8 @@ package slipp.stalk.infra.firebase;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import slipp.stalk.service.messaging.MessageSender;
-import slipp.stalk.service.messaging.Response;
+import slipp.stalk.service.message.MessageSender;
+import slipp.stalk.service.message.Response;
 
 import java.util.List;
 import java.util.stream.Collectors;

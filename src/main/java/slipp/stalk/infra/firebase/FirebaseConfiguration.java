@@ -7,8 +7,8 @@ import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEven
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import slipp.stalk.service.messaging.MessageSender;
-import slipp.stalk.service.messaging.Response;
+import slipp.stalk.service.message.MessageSender;
+import slipp.stalk.service.message.Response;
 
 import java.io.IOException;
 import java.util.List;

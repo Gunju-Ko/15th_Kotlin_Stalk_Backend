@@ -25,6 +25,22 @@ public abstract class IntegTest {
     @Autowired
     private JwtHelper jwtHelper;
 
+    protected <T> ResponseEntity<T> postForEntityWithJwtToken(String email, String url, Object body, Class<T> type) {
+        return this.exchangeWithJwtToken(email, url, HttpMethod.POST, body, type);
+    }
+
+    protected <T> ResponseEntity<T> deleteForEntityWithJwtToken(String email, String url, Object body, Class<T> type) {
+        return this.exchangeWithJwtToken(email, url, HttpMethod.DELETE, body, type);
+    }
+
+    protected <T> ResponseEntity<T> putForEntityWithJwtToken(String email, String url, Object body, Class<T> type) {
+        return this.exchangeWithJwtToken(email, url, HttpMethod.PUT, body, type);
+    }
+
+    protected <T> ResponseEntity<T> getForEntityWithJwtToken(String email, String url, Class<T> type) {
+        return this.exchangeWithJwtToken(email, url, HttpMethod.GET, type);
+    }
+
     protected <T> ResponseEntity<T> exchangeWithJwtToken(String email, String url, HttpMethod httpMethod, Object body, Class<T> type) {
         JwtToken token = createJwtToKen(email);
 

@@ -5,7 +5,7 @@ import com.google.firebase.messaging.Message;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import slipp.stalk.service.messaging.Response;
+import slipp.stalk.service.message.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static slipp.stalk.infra.firebase.FirebaseConfiguration.RESOURCE_LOCATION;
