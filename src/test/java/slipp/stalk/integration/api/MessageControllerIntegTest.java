@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.CreateMessageDto;
 import slipp.stalk.controller.dto.MessageDto;
 import slipp.stalk.controller.dto.MessagesDto;
+import slipp.stalk.controller.exceptions.MessageNotFoundException;
+import slipp.stalk.controller.exceptions.UpdateMessageDto;
 import slipp.stalk.domain.Message;
 import slipp.stalk.infra.jpa.repository.MessageRepository;
 
@@ -65,10 +67,29 @@ public class MessageControllerIntegTest extends IntegTest {
         String alreadyExistMessage = "점심 먹자";
 
         ResponseEntity<MessageDto> response = postForEntityWithJwtToken(email,
-                                                                        "/members/messages",
+                                                                        url,
                                                                         createBody(alreadyExistMessage),
                                                                         MessageDto.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    public void should__update_message() {
+        String email = "gunjuko92@gmail.com";
+        String updateMessage = "Test update!";
+        long messageId = 3;
+
+        ResponseEntity<MessageDto> response = putForEntityWithJwtToken(email,
+                                                                       url + "/" + messageId,
+                                                                       new UpdateMessageDto(updateMessage),
+                                                                       MessageDto.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getMessage()).isEqualTo(updateMessage);
+
+        Message dbMessage = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        assertThat(dbMessage.getMessage()).isEqualTo(updateMessage);
     }
 
     private void deleteMessage(String email, long id) {

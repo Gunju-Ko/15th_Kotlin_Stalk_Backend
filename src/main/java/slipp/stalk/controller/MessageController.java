@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.CreateMessageDto;
 import slipp.stalk.controller.dto.MessageDto;
 import slipp.stalk.controller.dto.MessagesDto;
+import slipp.stalk.controller.exceptions.UpdateMessageDto;
 import slipp.stalk.domain.Member;
 import slipp.stalk.domain.Message;
 import slipp.stalk.service.message.MessageService;
@@ -45,6 +47,14 @@ public class MessageController {
     public ResponseEntity<MessageDto> createMessage(@LoginUser Member member,
                                                     @RequestBody @Valid CreateMessageDto createMessageDto) {
         Message message = messageService.createMessage(member.getId(), createMessageDto.getMessage());
+        return ResponseEntity.ok(modelMapper.map(message, MessageDto.class));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MessageDto> updateMessage(@LoginUser Member member,
+                                                    @PathVariable long id,
+                                                    @RequestBody @Valid UpdateMessageDto updateMessageDto) {
+        Message message = messageService.updateMessage(member.getId(), id, updateMessageDto.getUpdateMessage());
         return ResponseEntity.ok(modelMapper.map(message, MessageDto.class));
     }
 

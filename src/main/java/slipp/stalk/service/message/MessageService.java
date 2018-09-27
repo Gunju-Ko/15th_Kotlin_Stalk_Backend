@@ -42,6 +42,13 @@ public class MessageService {
         member.deleteMessage(messageId);
     }
 
+    @Transactional
+    public Message updateMessage(long memberId, long messageId, String message) {
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(MemberNotFoundException::new);
+        return member.updateMessage(messageId, message);
+    }
+
     public void sendMessages(Member from, long memberId, long messageId) {
         Member to = memberRepository.findById(memberId)
                                     .orElseThrow(MemberNotFoundException::new);
