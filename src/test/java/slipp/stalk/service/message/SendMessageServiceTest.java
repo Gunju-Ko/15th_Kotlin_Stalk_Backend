@@ -1,4 +1,4 @@
-package slipp.stalk.service.messaging;
+package slipp.stalk.service.message;
 
 import com.google.firebase.messaging.Message;
 import org.junit.Before;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static slipp.stalk.service.messaging.Response.Result.SUCCESS;
+import static slipp.stalk.service.message.Response.Result.SUCCESS;
 
 public class SendMessageServiceTest {
 

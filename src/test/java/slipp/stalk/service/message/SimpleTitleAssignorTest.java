@@ -1,4 +1,4 @@
-package slipp.stalk.service.messaging;
+package slipp.stalk.service.message;
 
 import org.junit.Before;
 import org.junit.Test;

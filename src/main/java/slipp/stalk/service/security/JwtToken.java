@@ -7,7 +7,7 @@ public class JwtToken {
 
     public JwtToken(String token) {
         if (StringUtils.isEmpty(token)) {
-            throw new IllegalArgumentException("token cannot be empty");
+            throw new IllegalArgumentException("Token cannot be empty");
         }
         this.token = token;
     }

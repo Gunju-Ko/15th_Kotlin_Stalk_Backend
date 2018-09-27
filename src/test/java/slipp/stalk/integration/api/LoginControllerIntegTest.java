@@ -1,21 +1,16 @@
 package slipp.stalk.integration.api;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import slipp.stalk.controller.dto.JwtTokenDto;
 import slipp.stalk.controller.dto.LoginInfoDto;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginControllerIntegTest {
+public class LoginControllerIntegTest extends IntegTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

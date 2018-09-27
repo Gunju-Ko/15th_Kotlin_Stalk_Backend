@@ -1,4 +1,4 @@
-package slipp.stalk.service.messaging;
+package slipp.stalk.service.message;
 
 import slipp.stalk.domain.Member;
 

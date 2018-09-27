@@ -40,7 +40,7 @@ public class MemberTokenControllerTest {
         String token = "test token";
         long memberId = 0;
 
-        mvc.perform(post("/members/token", memberId)
+        mvc.perform(post("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -54,7 +54,7 @@ public class MemberTokenControllerTest {
         String token = "";
         long memberId = 0;
 
-        mvc.perform(post("/members/token", memberId)
+        mvc.perform(post("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -71,7 +71,7 @@ public class MemberTokenControllerTest {
         doThrow(MemberNotFoundException.class)
             .when(memberService).registerToken(memberId, token);
 
-        mvc.perform(post("/members/token", memberId)
+        mvc.perform(post("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -88,7 +88,7 @@ public class MemberTokenControllerTest {
         doThrow(TokenAlreadyRegisterException.class)
             .when(memberService).registerToken(memberId, token);
 
-        mvc.perform(post("/members/token", memberId)
+        mvc.perform(post("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -102,7 +102,7 @@ public class MemberTokenControllerTest {
         String token = "test";
         long memberId = 0L;
 
-        mvc.perform(delete("/members/token", memberId)
+        mvc.perform(delete("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
@@ -119,7 +119,7 @@ public class MemberTokenControllerTest {
         doThrow(TokenNotFoundException.class)
             .when(memberService).deleteToken(memberId, token);
 
-        mvc.perform(delete("/members/token", memberId)
+        mvc.perform(delete("/members/tokens", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())

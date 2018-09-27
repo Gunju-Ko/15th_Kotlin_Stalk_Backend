@@ -14,8 +14,6 @@ import slipp.stalk.service.security.JwtHelper;
 import slipp.stalk.service.security.JwtProperties;
 import slipp.stalk.service.security.JwtToken;
 
-import java.util.Optional;
-
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -62,7 +60,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
     private Member getMemberFromJwtToken(JwtToken token) {
         String email = jwtHelper.parseSubject(token);
-        Optional<Member> member = memberRepository.findByEmail(email);
-        return member.orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findByEmail(email)
+                               .orElseThrow(MemberNotFoundException::new);
     }
 }

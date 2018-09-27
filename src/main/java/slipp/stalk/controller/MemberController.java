@@ -30,14 +30,14 @@ public class MemberController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<MemberDto> get(@LoginUser Member loginUser) {
         Member member = memberService.get(loginUser.getId())
                                      .orElseThrow(MemberNotFoundException::new);
         return ResponseEntity.ok(mapToMemberDto(member));
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@LoginUser Member loginUser) {
         memberService.delete(loginUser.getId());
         return ResponseEntity.noContent()
