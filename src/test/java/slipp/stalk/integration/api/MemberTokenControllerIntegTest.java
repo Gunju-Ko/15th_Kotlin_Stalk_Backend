@@ -74,7 +74,7 @@ public class MemberTokenControllerIntegTest extends IntegTest {
     }
 
     private String createUrl() {
-        return "/members/token";
+        return "/members/tokens";
     }
 
 }

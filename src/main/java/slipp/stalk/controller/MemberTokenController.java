@@ -23,7 +23,7 @@ public class MemberTokenController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/token")
+    @PostMapping("/tokens")
     public ResponseEntity<Void> registerToken(@LoginUser Member member,
                                               @RequestBody @Valid FireabseTokenDto token) {
         memberService.registerToken(member.getId(), token.getToken());
@@ -31,7 +31,7 @@ public class MemberTokenController {
                              .build();
     }
 
-    @DeleteMapping("/token")
+    @DeleteMapping("/tokens")
     public ResponseEntity<Void> deleteToken(@LoginUser Member member,
                                             @RequestBody @Valid FireabseTokenDto token) {
         memberService.deleteToken(member.getId(), token.getToken());
