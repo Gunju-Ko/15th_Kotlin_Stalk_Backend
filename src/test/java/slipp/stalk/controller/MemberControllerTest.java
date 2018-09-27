@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import slipp.stalk.controller.dto.CreateMemberDto;
 import slipp.stalk.domain.Member;
-import slipp.stalk.service.MemberService;
+import slipp.stalk.service.member.MemberService;
 
 import java.util.Optional;
 
