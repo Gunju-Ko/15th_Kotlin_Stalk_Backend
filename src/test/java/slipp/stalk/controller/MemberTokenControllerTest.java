@@ -12,7 +12,7 @@ import slipp.stalk.controller.dto.FireabseTokenDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
-import slipp.stalk.service.MemberService;
+import slipp.stalk.service.member.MemberService;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;

@@ -1,4 +1,4 @@
-package slipp.stalk.service;
+package slipp.stalk.service.member;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -14,6 +14,7 @@ import slipp.stalk.infra.jpa.repository.TokenRepository;
 import slipp.stalk.support.DataJpaIntegrationTest;
 import slipp.stalk.support.MemberTestMother;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,7 @@ public class MemberServiceTest extends DataJpaIntegrationTest {
 
     @Before
     public void setUp() {
-        service = new MemberService(memberRepository, tokenRepository);
+        service = new MemberService(memberRepository, tokenRepository, Collections.emptyList());
     }
 
     @Test

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.FireabseTokenDto;
 import slipp.stalk.domain.Member;
-import slipp.stalk.service.MemberService;
+import slipp.stalk.service.member.MemberService;
 
 import javax.validation.Valid;
 

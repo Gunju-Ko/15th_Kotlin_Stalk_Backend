@@ -68,6 +68,12 @@ public class Member extends AbstractEntity {
         this.messages.remove(message);
     }
 
+    public Message updateMessage(long messageId, String updateMessage) {
+        Message message = findMessage(m -> m.getId() == messageId).orElseThrow(MessageNotFoundException::new);
+        message.setMessage(updateMessage);
+        return message;
+    }
+
     private Optional<Message> findMessage(Predicate<Message> predicate) {
         return messages.stream()
                        .filter(predicate)

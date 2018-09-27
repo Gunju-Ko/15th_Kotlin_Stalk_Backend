@@ -1,4 +1,4 @@
-package slipp.stalk.service;
+package slipp.stalk.service.member;
 
 import org.springframework.stereotype.Service;
 import slipp.stalk.controller.exceptions.MemberEmailAlreadyExistException;
@@ -11,6 +11,7 @@ import slipp.stalk.infra.jpa.repository.MemberRepository;
 import slipp.stalk.infra.jpa.repository.TokenRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,11 +19,14 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
+    private final List<CreateMemberListener> createMemberListeners;
 
     public MemberService(MemberRepository memberRepository,
-                         TokenRepository tokenRepository) {
+                         TokenRepository tokenRepository,
+                         List<CreateMemberListener> createMemberListeners) {
         this.memberRepository = memberRepository;
         this.tokenRepository = tokenRepository;
+        this.createMemberListeners = createMemberListeners;
     }
 
     public Optional<Member> get(long id) {
@@ -35,7 +39,9 @@ public class MemberService {
                         .ifPresent(t -> {
                             throw new MemberEmailAlreadyExistException(t.getEmail());
                         });
-        return memberRepository.save(body);
+        Member member = memberRepository.save(body);
+        createMemberListeners.forEach(listener -> listener.created(member));
+        return member;
     }
 
     public void delete(long id) {

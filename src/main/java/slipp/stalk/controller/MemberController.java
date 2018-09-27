@@ -14,7 +14,7 @@ import slipp.stalk.controller.dto.CreateMemberDto;
 import slipp.stalk.controller.dto.MemberDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.domain.Member;
-import slipp.stalk.service.MemberService;
+import slipp.stalk.service.member.MemberService;
 
 import javax.validation.Valid;
 
