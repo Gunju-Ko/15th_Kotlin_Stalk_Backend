@@ -37,8 +37,9 @@ public class MessageController {
 
     @GetMapping
     public ResponseEntity<MessagesDto> getMessages(@LoginUser Member member) {
-        List<MessageDto> messages = messageService.getMessages(member.getId()).stream()
-                                                  .map(m -> modelMapper.map(m, MessageDto.class))
+        List<MessageDto> messages = messageService.getMessages(member.getId())
+                                                  .stream()
+                                                  .map(this::mapToMessageDto)
                                                   .collect(Collectors.toList());
         return ResponseEntity.ok(new MessagesDto(messages));
     }
@@ -47,7 +48,7 @@ public class MessageController {
     public ResponseEntity<MessageDto> createMessage(@LoginUser Member member,
                                                     @RequestBody @Valid CreateMessageDto createMessageDto) {
         Message message = messageService.createMessage(member.getId(), createMessageDto.getMessage());
-        return ResponseEntity.ok(modelMapper.map(message, MessageDto.class));
+        return ResponseEntity.ok(mapToMessageDto(message));
     }
 
     @PutMapping("/{id}")
@@ -55,7 +56,7 @@ public class MessageController {
                                                     @PathVariable long id,
                                                     @RequestBody @Valid UpdateMessageDto updateMessageDto) {
         Message message = messageService.updateMessage(member.getId(), id, updateMessageDto.getUpdateMessage());
-        return ResponseEntity.ok(modelMapper.map(message, MessageDto.class));
+        return ResponseEntity.ok(mapToMessageDto(message));
     }
 
     @DeleteMapping("/{id}")
@@ -64,5 +65,9 @@ public class MessageController {
         messageService.delete(member.getId(), id);
         return ResponseEntity.noContent()
                              .build();
+    }
+
+    private MessageDto mapToMessageDto(Message m) {
+        return modelMapper.map(m, MessageDto.class);
     }
 }

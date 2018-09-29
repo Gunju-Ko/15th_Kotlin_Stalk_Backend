@@ -18,7 +18,7 @@ public class Message extends AbstractEntity {
     @Column(name = "message", nullable = false)
     private String message;
     @ManyToOne
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_message_member"))
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_message_to_member"))
     private Member member;
 
     public Message(String message, Member member) {

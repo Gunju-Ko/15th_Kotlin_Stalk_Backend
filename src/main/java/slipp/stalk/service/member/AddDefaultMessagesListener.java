@@ -15,7 +15,6 @@ public class AddDefaultMessagesListener implements CreateMemberListener {
                                                         "출근함?",
                                                         "YES",
                                                         "NO");
-
     @Override
     @Transactional
     public void created(Member member) {

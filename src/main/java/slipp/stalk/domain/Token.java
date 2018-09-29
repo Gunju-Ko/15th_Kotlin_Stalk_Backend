@@ -18,7 +18,7 @@ public class Token extends AbstractEntity {
     @Column(unique = true)
     private String value;
     @ManyToOne
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_token_member"))
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_token_to_member"))
     private Member member;
 
     public Token() {
