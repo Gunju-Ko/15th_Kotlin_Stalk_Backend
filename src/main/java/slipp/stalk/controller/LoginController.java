@@ -22,7 +22,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtTokenDto> login(@RequestBody @Valid LoginInfoDto loginInfo) {
-        JwtToken token = jwtLoginService.login(loginInfo.getEmail(), loginInfo.getPassword());
+        JwtToken token = jwtLoginService.login(loginInfo.getEmail(), loginInfo.getPassword(), loginInfo.getToken());
         return ResponseEntity.ok(JwtTokenDto.of(token));
     }
 }
