@@ -49,8 +49,8 @@ public class MessageService {
         return member.updateMessage(messageId, message);
     }
 
-    public void sendMessages(Member from, long memberId, long messageId) {
-        Member to = memberRepository.findById(memberId)
+    public void sendMessages(Member from, long toMemberId, long messageId) {
+        Member to = memberRepository.findById(toMemberId)
                                     .orElseThrow(MemberNotFoundException::new);
 
         Message message = from.getMessage(messageId)

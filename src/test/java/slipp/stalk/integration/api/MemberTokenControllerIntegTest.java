@@ -18,7 +18,7 @@ public class MemberTokenControllerIntegTest extends IntegTest {
 
     @Test
     public void registerToken() throws Exception {
-        FireabseTokenDto token = new FireabseTokenDto("test");
+        FireabseTokenDto token = FireabseTokenDto.of("test");
 
         createToken(token, defaultUserEmail);
         assertThat(memberHasToken(defaultUserEmail, token)).isTrue();
@@ -29,7 +29,7 @@ public class MemberTokenControllerIntegTest extends IntegTest {
 
     @Test
     public void registerToken_fail_if_token_already_exist() throws Exception {
-        FireabseTokenDto token = new FireabseTokenDto("test");
+        FireabseTokenDto token = FireabseTokenDto.of("test");
         createToken(token, defaultUserEmail);
 
         ResponseEntity<Void> response = postForEntityWithJwtToken(defaultUserEmail, createUrl(), token, Void.class);
