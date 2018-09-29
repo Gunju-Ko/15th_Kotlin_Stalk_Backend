@@ -72,16 +72,6 @@ public class LoginControllerIntegTest extends IntegTest {
         assertTokenIsNotExist(token);
     }
 
-    private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
-        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
-    }
-
-    private void deleteToken(String token) {
-        Token dbToken = tokenRepository.findByValue(token)
-                                       .orElseThrow(IllegalArgumentException::new);
-        tokenRepository.delete(dbToken);
-    }
-
     private void assertTokenIsExist(String token) {
         assertTokenIsExistOrNot(token, true);
     }
@@ -94,6 +84,10 @@ public class LoginControllerIntegTest extends IntegTest {
         assertThat(tokenRepository.findByValue(token).isPresent()).isEqualTo(exist);
     }
 
+    private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
+        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
+    }
+
     private LoginInfoDto createBody(String email, String password, String token) {
         LoginInfoDto body = new LoginInfoDto();
         body.setEmail(email);
@@ -101,5 +95,11 @@ public class LoginControllerIntegTest extends IntegTest {
         body.setToken(token);
 
         return body;
+    }
+
+    private void deleteToken(String token) {
+        Token dbToken = tokenRepository.findByValue(token)
+                                       .orElseThrow(IllegalArgumentException::new);
+        tokenRepository.delete(dbToken);
     }
 }

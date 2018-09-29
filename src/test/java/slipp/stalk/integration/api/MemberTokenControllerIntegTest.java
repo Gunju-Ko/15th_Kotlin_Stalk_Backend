@@ -34,10 +34,10 @@ public class MemberTokenControllerIntegTest extends IntegTest {
     }
 
     private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
-        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
+        return restTemplate.postForEntity("/login", createLoginInfo(email, password, token), JwtTokenDto.class);
     }
 
-    private LoginInfoDto createBody(String email, String password, String token) {
+    private LoginInfoDto createLoginInfo(String email, String password, String token) {
         LoginInfoDto body = new LoginInfoDto();
         body.setEmail(email);
         body.setPassword(password);
@@ -56,14 +56,13 @@ public class MemberTokenControllerIntegTest extends IntegTest {
 
     private void deleteToken(String email, String token) {
         ResponseEntity<Void> response = deleteForEntityWithJwtToken(email,
-                                                                    createUrl(),
+                                                                    deleteUrl(),
                                                                     FireabseTokenDto.of(token),
                                                                     Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    private String createUrl() {
+    private String deleteUrl() {
         return "/members/tokens";
     }
-
 }
