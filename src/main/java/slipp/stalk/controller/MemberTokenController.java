@@ -2,7 +2,6 @@ package slipp.stalk.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,14 +20,6 @@ public class MemberTokenController {
 
     public MemberTokenController(MemberService memberService) {
         this.memberService = memberService;
-    }
-
-    @PostMapping("/tokens")
-    public ResponseEntity<Void> registerToken(@LoginUser Member member,
-                                              @RequestBody @Valid FireabseTokenDto token) {
-        memberService.registerToken(member.getId(), token.getToken());
-        return ResponseEntity.noContent()
-                             .build();
     }
 
     @DeleteMapping("/tokens")

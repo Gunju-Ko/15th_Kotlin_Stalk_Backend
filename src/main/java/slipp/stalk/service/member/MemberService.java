@@ -1,6 +1,7 @@
 package slipp.stalk.service.member;
 
 import org.springframework.stereotype.Service;
+import slipp.stalk.controller.exceptions.BadCredentialsException;
 import slipp.stalk.controller.exceptions.MemberEmailAlreadyExistException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
@@ -31,6 +32,15 @@ public class MemberService {
 
     public Optional<Member> get(long id) {
         return memberRepository.findById(id);
+    }
+
+    public Member getLoginMember(String email, String password) {
+        Member member = memberRepository.findByEmail(email)
+                                        .orElseThrow(MemberNotFoundException::new);
+        if (!member.checkPassword(password)) {
+            throw new BadCredentialsException();
+        }
+        return member;
     }
 
     @Transactional

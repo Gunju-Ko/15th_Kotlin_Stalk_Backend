@@ -1,33 +1,24 @@
 package slipp.stalk.service.security;
 
 import org.springframework.stereotype.Component;
-import slipp.stalk.controller.exceptions.BadCredentialsException;
-import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.domain.Member;
-import slipp.stalk.infra.jpa.repository.MemberRepository;
+import slipp.stalk.service.member.MemberService;
 
 @Component
 public class JwtLoginService {
 
-    private final MemberRepository repository;
+    private final MemberService memberService;
     private final JwtHelper jwtHelper;
 
-    public JwtLoginService(MemberRepository repository, JwtHelper jwtHelper) {
-        this.repository = repository;
+    public JwtLoginService(MemberService memberService, JwtHelper jwtHelper) {
+        this.memberService = memberService;
         this.jwtHelper = jwtHelper;
     }
 
-    public JwtToken login(String email, String password) {
-        Member member = repository.findByEmail(email)
-                                  .orElseThrow(MemberNotFoundException::new);
-        checkPassword(member, password);
+    public JwtToken login(String email, String password, String token) {
+        Member member = memberService.getLoginMember(email, password);
+        memberService.registerToken(member.getId(), token);
         return createJwtTokenFromMember(member);
-    }
-
-    private void checkPassword(Member member, String password) {
-        if (!member.checkPassword(password)) {
-            throw new BadCredentialsException();
-        }
     }
 
     private JwtToken createJwtTokenFromMember(Member member) {
