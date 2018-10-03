@@ -39,10 +39,12 @@ dependencies {
     compile('org.modelmapper:modelmapper:2.1.0')
     compile('com.google.firebase:firebase-admin:6.2.0')
     compile('io.jsonwebtoken:jjwt:+')
+    compile 'org.apache.commons:commons-lang3:3.7'
+
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly('org.projectlombok:lombok')
 
     runtime('com.h2database:h2')
-    compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
