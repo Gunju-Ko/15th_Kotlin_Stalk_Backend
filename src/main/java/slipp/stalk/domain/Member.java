@@ -34,7 +34,7 @@ public class Member extends AbstractEntity {
         this.tokens.addToken(token, this);
     }
 
-    public boolean deleteToken(Token token) {
+    public boolean deleteToken(String token) {
         return tokens.deleteToken(token);
     }
 

@@ -7,7 +7,6 @@ import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.TokenAlreadyRegisterException;
 import slipp.stalk.controller.exceptions.TokenNotFoundException;
 import slipp.stalk.domain.Member;
-import slipp.stalk.domain.Token;
 import slipp.stalk.infra.jpa.repository.MemberRepository;
 import slipp.stalk.infra.jpa.repository.TokenRepository;
 
@@ -73,9 +72,7 @@ public class MemberService {
     @Transactional
     public void deleteToken(long id, String token) {
         Member m = get(id).orElseThrow(MemberNotFoundException::new);
-        Token t = tokenRepository.findByValue(token)
-                                 .orElseThrow(() -> new TokenNotFoundException(token));
-        if (!m.deleteToken(t)) {
+        if (!m.deleteToken(token)) {
             throw new TokenNotFoundException(token);
         }
     }
