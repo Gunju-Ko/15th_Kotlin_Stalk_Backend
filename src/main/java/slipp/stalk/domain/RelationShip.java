@@ -25,8 +25,12 @@ public class RelationShip {
         this.relationShipType = Objects.requireNonNull(relationShipType);
     }
 
-    private RelationShip createFriendShip(Member from, Member to) {
+    public static RelationShip createFriendShip(Member from, Member to) {
         return new RelationShip(from, to, RelationShipType.FRIENDSHIP);
+    }
+
+    public boolean isFriendShip() {
+        return this.relationShipType == RelationShipType.FRIENDSHIP;
     }
 
     public enum RelationShipType {

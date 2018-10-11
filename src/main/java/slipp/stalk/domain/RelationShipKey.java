@@ -22,7 +22,7 @@ public class RelationShipKey implements Serializable {
     private RelationShipKey() {
     }
 
-    RelationShipKey(Member from, Member to) {
+    public RelationShipKey(Member from, Member to) {
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);
     }
