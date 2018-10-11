@@ -1,7 +1,12 @@
 # Stalk
 
 ## 15th_Kotlin_Stalk_Backend
-15기 슬립스터디 프로젝트
+15기 슬립스터디 프로젝트입니다.
+
+백엔드 서버를 위한 저장소이며 아래 링크에 가시면 관련 프로젝트 코드를 보실 수 있습니다.
+
+* [15th_Kotlin_Stalk_Front](https://github.com/RudiaMoon/15th_Kotlin_Stalk_Front)
+
 
 ## 개발 환경
 - java 1.8
