@@ -7,6 +7,8 @@ import slipp.stalk.domain.support.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,21 @@ public class Member extends AbstractEntity {
     private String email;
     @Column(name = "MEMBER_PASSWORD", nullable = false)
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Embedded
     private Tokens tokens = new Tokens();
     @Embedded
     private Messages messages = new Messages();
+
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
+
+    public enum Role {
+        ADMIN,
+        USER
+    }
 
     public List<Token> getTokens() {
         return tokens.getTokens();

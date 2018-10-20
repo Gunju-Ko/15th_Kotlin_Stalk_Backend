@@ -1,5 +1,7 @@
 package slipp.stalk.commoon.security;
 
+import slipp.stalk.domain.Member;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,5 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoginUser {
     boolean required() default true;
-}
 
+    Member.Role role() default Member.Role.USER;
+}

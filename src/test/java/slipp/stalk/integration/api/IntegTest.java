@@ -53,6 +53,10 @@ public abstract class IntegTest {
         return this.exchangeWithJwtToken(email, url, httpMethod, null, type);
     }
 
+    protected TestRestTemplate restTemplate() {
+        return this.testRestTemplate;
+    }
+
     private JwtToken createJwtToKen(String email) {
         Member member = new Member();
         member.setEmail(email);

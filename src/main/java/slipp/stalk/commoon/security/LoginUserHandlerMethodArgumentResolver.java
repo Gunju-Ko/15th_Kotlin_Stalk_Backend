@@ -6,6 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import slipp.stalk.controller.exceptions.AccessDeniedException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.controller.exceptions.UnAuthorizedException;
 import slipp.stalk.domain.Member;
@@ -20,13 +21,15 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     private final JwtProperties jwtProperties;
     private final JwtHelper jwtHelper;
     private final MemberRepository memberRepository;
+    private final RoleManager roleManager;
 
     public LoginUserHandlerMethodArgumentResolver(JwtProperties jwtProperties,
                                                   JwtHelper jwtHelper,
-                                                  MemberRepository memberRepository) {
+                                                  MemberRepository memberRepository, RoleManager roleManager) {
         this.jwtProperties = jwtProperties;
         this.jwtHelper = jwtHelper;
         this.memberRepository = memberRepository;
+        this.roleManager = roleManager;
     }
 
     @Override
@@ -39,12 +42,19 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
+        LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
+        if (loginUser == null) {
+            throw new IllegalStateException();
+        }
         JwtToken token = getJwtTokenFromRequest(webRequest);
         if (token != null) {
-            return getMemberFromJwtToken(token);
+            Member member = getMemberFromJwtToken(token);
+            if (!roleManager.hasAuthority(member, loginUser.role())) {
+                throw new AccessDeniedException();
+            }
+            return member;
         }
-        LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
-        if (loginUser != null && loginUser.required()) {
+        if (loginUser.required()) {
             throw new UnAuthorizedException("You're required Login!");
         }
         return null;
