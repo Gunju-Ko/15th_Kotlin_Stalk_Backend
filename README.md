@@ -80,3 +80,57 @@ curl -X GET http://localhost:8080/members/1
     "email": "gunjuko92@gmail.com"
 }
 ```
+
+## APIS
+
+### 로그인
+
+##### 요청
+
+```
+curl -X POST \
+  http://localhost:8080/login \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"email" : "gunjuko92@gmail.com",
+	"password" : "test123",
+	"token" : "cvwvUUoYeXM:APA91bH0EnvPXe5u6mb-RDi3ECdQBUZYegIGCGnMup6Ml9BFkzHjAzRD3gPQA8snCg1dqLdVgUnHAZX1xe-NhDU9x_Faqtjj4W9QRZsx35e_kYDH1GGvwpyR-3_emrTcVY9nuDw9U-TAX0gmjJQ5Sau_U_kkcvwjMg"
+}'
+
+```
+
+* email : 유저 이메일
+* password : 유저 패스워드
+* token : Firebase 토큰
+
+##### 응답
+
+* 200 OK : 로그인 성공
+
+```json
+{
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1NDAxMDA4MTcsImlhdCI6MTU0MDAxNDQxNywic3ViIjoiZ3VuanVrbzkyQGdtYWlsLmNvbSJ9.ksRQuEkhagcwNwmyVB-2tKiThQLRwt1wERRuJp4iaaxr0Ybcxy2cccT7P36DnGb48tE86xsjYnaj8OgbaxG9og"
+}
+```
+
+* token : JWT 토큰 (이후에 요청은 헤더로 JWT 토큰을 전달해줘야함)
+
+### 로그아웃
+
+##### 요청
+
+```
+curl -X POST \
+  http://localhost:8080/logout \
+  -H 'Authentication: eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1NDAxMDA4MTcsImlhdCI6MTU0MDAxNDQxNywic3ViIjoiZ3VuanVrbzkyQGdtYWlsLmNvbSJ9.ksRQuEkhagcwNwmyVB-2tKiThQLRwt1wERRuJp4iaaxr0Ybcxy2cccT7P36DnGb48tE86xsjYnaj8OgbaxG9og' \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"token" : "cvwvUUoYeXM:APA91bH0EnvPXe5u6mb-RDi3ECdQBUZYegIGCGnMup6Ml9BFkzHjAzRD3gPQA8snCg1dqLdVgUnHAZX1xe-NhDU9x_Faqtjj4W9QRZsx35e_kYDH1GGvwpyR-3_emrTcVY9nuDw9U-TAX0gmjJQ5Sau_U_kkcvwjMg"
+}'
+```
+
+* token : Firebase 토큰
+
+##### 응답
+
+* 204 NO Content : 로그아웃 성공
