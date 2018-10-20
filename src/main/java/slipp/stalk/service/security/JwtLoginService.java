@@ -21,6 +21,10 @@ public class JwtLoginService {
         return createJwtTokenFromMember(member);
     }
 
+    public void logout(long id, String token) {
+        memberService.deleteToken(id, token);
+    }
+
     private JwtToken createJwtTokenFromMember(Member member) {
         return jwtHelper.createToken(member);
     }

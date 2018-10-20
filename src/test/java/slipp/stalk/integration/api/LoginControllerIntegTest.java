@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.JwtTokenDto;
 import slipp.stalk.controller.dto.LoginInfoDto;
+import slipp.stalk.controller.dto.LogoutDto;
 import slipp.stalk.domain.Token;
 import slipp.stalk.infra.jpa.repository.TokenRepository;
 
@@ -72,6 +73,29 @@ public class LoginControllerIntegTest extends IntegTest {
         assertTokenIsNotExist(token);
     }
 
+    @Test
+    public void should__delete_token_when_logout_success() {
+        String email = "gunjuko92@gmail.com";
+        String password = "test123";
+        String token = "test token";
+
+        login(email, password, token);
+        assertTokenIsExist(token);
+
+        ResponseEntity<Void> response = logout(email, token);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertTokenIsNotExist(token);
+    }
+
+    private ResponseEntity<Void> logout(String email, String token) {
+        LogoutDto logoutDto = new LogoutDto(token);
+        return postForEntityWithJwtToken(email, "/logout", logoutDto, Void.class);
+    }
+
+    private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
+        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
+    }
+
     private void assertTokenIsExist(String token) {
         assertTokenIsExistOrNot(token, true);
     }
@@ -82,10 +106,6 @@ public class LoginControllerIntegTest extends IntegTest {
 
     private void assertTokenIsExistOrNot(String token, boolean exist) {
         assertThat(tokenRepository.findByValue(token).isPresent()).isEqualTo(exist);
-    }
-
-    private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
-        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
     }
 
     private LoginInfoDto createBody(String email, String password, String token) {
