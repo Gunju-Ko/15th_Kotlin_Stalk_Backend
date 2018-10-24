@@ -58,29 +58,6 @@ gradlew.bat build -x test
 gradlew.bat bootRun
 ```
 
-## Test
-
-#### Test API
-
-어플리케이션 실행 후 SAMPLE API를 호출해보세요.
-
-##### curl
-
-``` 
-curl -X GET http://localhost:8080/members/1
-```
-
-##### response
-
-```json
-{
-    "memberId": "gunju",
-    "password": "test",
-    "name": "고건주",
-    "email": "gunjuko92@gmail.com"
-}
-```
-
 ## APIS
 
 ### 로그인
