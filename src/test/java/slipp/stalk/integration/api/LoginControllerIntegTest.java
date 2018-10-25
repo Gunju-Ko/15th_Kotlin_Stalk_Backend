@@ -2,12 +2,10 @@ package slipp.stalk.integration.api;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.JwtTokenDto;
 import slipp.stalk.controller.dto.LoginInfoDto;
 import slipp.stalk.controller.dto.LogoutDto;
+import slipp.stalk.controller.dto.ResponseDto;
 import slipp.stalk.domain.Token;
 import slipp.stalk.infra.jpa.repository.TokenRepository;
 
@@ -15,8 +13,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class LoginControllerIntegTest extends IntegTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
     @Autowired
     private TokenRepository tokenRepository;
 
@@ -26,9 +22,9 @@ public class LoginControllerIntegTest extends IntegTest {
         String password = "test123";
         String token = "test token";
 
-        ResponseEntity<JwtTokenDto> response = login(email, password, token);
+        ResponseDto<JwtTokenDto> response = login(email, password, token);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
         assertTokenIsExist(token);
 
         deleteToken(token);
@@ -43,22 +39,10 @@ public class LoginControllerIntegTest extends IntegTest {
         login(email, password, token);
 
         // login again with same firebase token
-        ResponseEntity<JwtTokenDto> response = login(email, password, token);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        ResponseDto<JwtTokenDto> response = login(email, password, token);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.FAIL);
 
         deleteToken(token);
-    }
-
-    @Test
-    public void shouldNot__return_jwt_token_when_password_is_too_short() {
-        String email = "gunjuko92@gmail.com";
-        String password = "test";
-        String token = "test token";
-
-        ResponseEntity<JwtTokenDto> response = login(email, password, token);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertTokenIsNotExist(token);
     }
 
     @Test
@@ -67,9 +51,9 @@ public class LoginControllerIntegTest extends IntegTest {
         String wrongPassword = "test1234";
         String token = "test token";
 
-        ResponseEntity<JwtTokenDto> response = login(email, wrongPassword, token);
+        ResponseDto<JwtTokenDto> response = login(email, wrongPassword, token);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.FAIL);
         assertTokenIsNotExist(token);
     }
 
@@ -82,18 +66,18 @@ public class LoginControllerIntegTest extends IntegTest {
         login(email, password, token);
         assertTokenIsExist(token);
 
-        ResponseEntity<Void> response = logout(email, token);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = logout(email, token);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
         assertTokenIsNotExist(token);
     }
 
-    private ResponseEntity<Void> logout(String email, String token) {
+    private ResponseDto<Void> logout(String email, String token) {
         LogoutDto logoutDto = new LogoutDto(token);
         return postForEntityWithJwtToken(email, "/logout", logoutDto, Void.class);
     }
 
-    private ResponseEntity<JwtTokenDto> login(String email, String password, String token) {
-        return restTemplate.postForEntity("/login", createBody(email, password, token), JwtTokenDto.class);
+    private ResponseDto<JwtTokenDto> login(String email, String password, String token) {
+        return post("/login", createBody(email, password, token), JwtTokenDto.class);
     }
 
     private void assertTokenIsExist(String token) {

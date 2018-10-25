@@ -1,7 +1,6 @@
 package slipp.stalk.controller;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.CreateMessageDto;
 import slipp.stalk.controller.dto.MessageDto;
 import slipp.stalk.controller.dto.MessagesDto;
+import slipp.stalk.controller.dto.ResponseDto;
 import slipp.stalk.controller.exceptions.UpdateMessageDto;
 import slipp.stalk.domain.Member;
 import slipp.stalk.domain.Message;
@@ -36,35 +36,34 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<MessagesDto> getMessages(@LoginUser Member member) {
+    public ResponseDto<MessagesDto> getMessages(@LoginUser Member member) {
         List<MessageDto> messages = messageService.getMessages(member.getId())
                                                   .stream()
                                                   .map(this::mapToMessageDto)
                                                   .collect(Collectors.toList());
-        return ResponseEntity.ok(new MessagesDto(messages));
+        return ResponseDto.ok(new MessagesDto(messages));
     }
 
     @PostMapping
-    public ResponseEntity<MessageDto> createMessage(@LoginUser Member member,
-                                                    @RequestBody @Valid CreateMessageDto createMessageDto) {
+    public ResponseDto<MessageDto> createMessage(@LoginUser Member member,
+                                                 @RequestBody @Valid CreateMessageDto createMessageDto) {
         Message message = messageService.createMessage(member.getId(), createMessageDto.getMessage());
-        return ResponseEntity.ok(mapToMessageDto(message));
+        return ResponseDto.ok(mapToMessageDto(message));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MessageDto> updateMessage(@LoginUser Member member,
-                                                    @PathVariable long id,
-                                                    @RequestBody @Valid UpdateMessageDto updateMessageDto) {
+    public ResponseDto<MessageDto> updateMessage(@LoginUser Member member,
+                                                 @PathVariable long id,
+                                                 @RequestBody @Valid UpdateMessageDto updateMessageDto) {
         Message message = messageService.updateMessage(member.getId(), id, updateMessageDto.getUpdateMessage());
-        return ResponseEntity.ok(mapToMessageDto(message));
+        return ResponseDto.ok(mapToMessageDto(message));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMessage(@LoginUser Member member,
-                                              @PathVariable long id) {
+    public ResponseDto<Void> deleteMessage(@LoginUser Member member,
+                                           @PathVariable long id) {
         messageService.delete(member.getId(), id);
-        return ResponseEntity.noContent()
-                             .build();
+        return ResponseDto.noContent();
     }
 
     private MessageDto mapToMessageDto(Message m) {

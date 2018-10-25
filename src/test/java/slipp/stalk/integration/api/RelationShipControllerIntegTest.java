@@ -1,9 +1,9 @@
 package slipp.stalk.integration.api;
 
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
 import slipp.stalk.controller.dto.Friends;
+import slipp.stalk.controller.dto.ResponseDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -24,8 +24,8 @@ public class RelationShipControllerIntegTest extends IntegTest {
         addFriends(defaultUser, friendMemberId);
         getAndAssertFriendsSize(defaultUser, 1);
 
-        ResponseEntity<Void> response = postForEntityWithJwtToken(defaultUser, url + "/" + friendMemberId, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        ResponseDto<Void> response = postForEntityWithJwtToken(defaultUser, url + "/" + friendMemberId, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.FAIL);
 
         deleteFriends(defaultUser, friendMemberId);
     }
@@ -40,24 +40,24 @@ public class RelationShipControllerIntegTest extends IntegTest {
         deleteFriends(defaultUser, friendMemberId);
         getAndAssertFriendsSize(defaultUser, 0);
 
-        ResponseEntity<Void> response = deleteForEntityWithJwtToken(defaultUser, url + "/" + friendMemberId, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        ResponseDto<Void> response = deleteForEntityWithJwtToken(defaultUser, url + "/" + friendMemberId, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.FAIL);
     }
 
     private void deleteFriends(String defaultUser, long memberId) {
-        ResponseEntity<Void> response = deleteForEntityWithJwtToken(defaultUser, url + "/" + memberId, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = deleteForEntityWithJwtToken(defaultUser, url + "/" + memberId, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
     private void addFriends(String defaultUser, long memberId) {
-        ResponseEntity<Void> response = postForEntityWithJwtToken(defaultUser, url + "/" + memberId, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = postForEntityWithJwtToken(defaultUser, url + "/" + memberId, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
     public void getAndAssertFriendsSize(String user, int expectedSize) {
-        ResponseEntity<Friends> response = getForEntityWithJwtToken(user, url, Friends.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Friends body = response.getBody();
+        ResponseDto<Friends> response = getForEntityWithJwtToken(user, url, new ParameterizedTypeReference<ResponseDto<Friends>>() {});
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
+        Friends body = response.getData();
         assertThat(body).isNotNull();
         assertThat(body.getFriends().size()).isEqualTo(expectedSize);
     }

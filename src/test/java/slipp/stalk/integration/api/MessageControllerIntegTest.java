@@ -3,11 +3,13 @@ package slipp.stalk.integration.api;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.CreateMessageDto;
 import slipp.stalk.controller.dto.MessageDto;
 import slipp.stalk.controller.dto.MessagesDto;
+import slipp.stalk.controller.dto.ResponseDto;
 import slipp.stalk.controller.exceptions.MessageNotFoundException;
 import slipp.stalk.controller.exceptions.UpdateMessageDto;
 import slipp.stalk.domain.Message;
@@ -34,9 +36,11 @@ public class MessageControllerIntegTest extends IntegTest {
     @Test
     public void should__return_message_list() {
         String email = "gunjuko92@gmail.com";
-        ResponseEntity<MessagesDto> response = getForEntityWithJwtToken(email, url, MessagesDto.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        MessagesDto messages = response.getBody();
+        ResponseDto<MessagesDto> response = getForEntityWithJwtToken(email,
+                                                                     url,
+                                                                     new ParameterizedTypeReference<ResponseDto<MessagesDto>>() {});
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
+        MessagesDto messages = response.getData();
         assertThat(messages.size()).isEqualTo(5);
     }
 
@@ -45,10 +49,13 @@ public class MessageControllerIntegTest extends IntegTest {
         String email = "gunjuko92@gmail.com";
         String message = "test";
 
-        ResponseEntity<MessageDto> response = postForEntityWithJwtToken(email, url, createBody(message), MessageDto.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseDto<MessageDto> response = postForEntityWithJwtToken(email,
+                                                                     url,
+                                                                     createBody(message),
+                                                                     new ParameterizedTypeReference<ResponseDto<MessageDto>>() {});
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
 
-        MessageDto body = response.getBody();
+        MessageDto body = response.getData();
 
         assertThat(body).isNotNull();
         assertThat(body.getMessage()).isEqualTo(message);
@@ -66,11 +73,11 @@ public class MessageControllerIntegTest extends IntegTest {
         String email = "gunjuko92@gmail.com";
         String alreadyExistMessage = "점심 먹자";
 
-        ResponseEntity<MessageDto> response = postForEntityWithJwtToken(email,
-                                                                        url,
-                                                                        createBody(alreadyExistMessage),
-                                                                        MessageDto.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        ResponseDto<MessageDto> response = postForEntityWithJwtToken(email,
+                                                                     url,
+                                                                     createBody(alreadyExistMessage),
+                                                                     new ParameterizedTypeReference<ResponseDto<MessageDto>>() {});
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.FAIL);
     }
 
     @Test
@@ -79,22 +86,22 @@ public class MessageControllerIntegTest extends IntegTest {
         String updateMessage = "Test update!";
         long messageId = 3;
 
-        ResponseEntity<MessageDto> response = putForEntityWithJwtToken(email,
-                                                                       url + "/" + messageId,
-                                                                       new UpdateMessageDto(updateMessage),
-                                                                       MessageDto.class);
+        ResponseDto<MessageDto> response = putForEntityWithJwtToken(email,
+                                                                    url + "/" + messageId,
+                                                                    new UpdateMessageDto(updateMessage),
+                                                                    new ParameterizedTypeReference<ResponseDto<MessageDto>>() {});
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getMessage()).isEqualTo(updateMessage);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
+        assertThat(response.getData()).isNotNull();
+        assertThat(response.getData().getMessage()).isEqualTo(updateMessage);
 
         Message dbMessage = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         assertThat(dbMessage.getMessage()).isEqualTo(updateMessage);
     }
 
     private void deleteMessage(String email, long id) {
-        ResponseEntity<Void> response = deleteForEntityWithJwtToken(email, url + "/" + id, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = deleteForEntityWithJwtToken(email, url + "/" + id, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
     private CreateMessageDto createBody(String message) {

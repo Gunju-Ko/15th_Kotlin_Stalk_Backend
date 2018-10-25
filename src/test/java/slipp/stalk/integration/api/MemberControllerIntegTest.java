@@ -3,10 +3,12 @@ package slipp.stalk.integration.api;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.CreateMemberDto;
 import slipp.stalk.controller.dto.MemberDto;
+import slipp.stalk.controller.dto.ResponseDto;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -22,16 +24,18 @@ public class MemberControllerIntegTest extends IntegTest {
 
         String path = createResource("/members", body);
 
-        ResponseEntity<MemberDto> response = getForEntityWithJwtToken(email, path, MemberDto.class);
+        ResponseDto<MemberDto> response = getForEntityWithJwtToken(email,
+                                                                   path,
+                                                                   new ParameterizedTypeReference<ResponseDto<MemberDto>>() {});
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        MemberDto responseBody = response.getBody();
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
+        MemberDto responseBody = response.getData();
         assertThat(responseBody).isNotNull();
         assertThat(responseBody.getName()).isEqualTo(body.getName());
         assertThat(responseBody.getEmail()).isEqualTo(body.getEmail());
 
         deleteResource(email, path);
-        assertHttpStatusCode(email, path, HttpStatus.NOT_FOUND);
+        assertResult(email, path, ResponseDto.Result.FAIL);
     }
 
     @Test
@@ -48,13 +52,13 @@ public class MemberControllerIntegTest extends IntegTest {
     }
 
     private void deleteResource(String email, String path) {
-        ResponseEntity<Void> response = deleteForEntityWithJwtToken(email, path, null, Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = deleteForEntityWithJwtToken(email, path, null, Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
-    private void assertHttpStatusCode(String email, String path, HttpStatus status) {
-        ResponseEntity<MemberDto> response = getForEntityWithJwtToken(email, path, MemberDto.class);
-        assertThat(response.getStatusCode()).isEqualTo(status);
+    private void assertResult(String email, String path, ResponseDto.Result result) {
+        ResponseDto<MemberDto> response = getForEntityWithJwtToken(email, path, MemberDto.class);
+        assertThat(response.getResult()).isEqualTo(result);
     }
 
     private CreateMemberDto createBody(String email) {
