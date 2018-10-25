@@ -40,7 +40,7 @@ public class MemberTokenControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(token)))
            .andDo(print())
-           .andExpect(status().is(204));
+           .andExpect(status().is(200));
 
         verify(memberService).deleteToken(memberId, token);
     }

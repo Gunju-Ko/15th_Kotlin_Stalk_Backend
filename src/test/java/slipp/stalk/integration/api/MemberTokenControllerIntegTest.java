@@ -3,11 +3,11 @@ package slipp.stalk.integration.api;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import slipp.stalk.controller.dto.FireabseTokenDto;
 import slipp.stalk.controller.dto.JwtTokenDto;
 import slipp.stalk.controller.dto.LoginInfoDto;
+import slipp.stalk.controller.dto.ResponseDto;
 import slipp.stalk.domain.Token;
 import slipp.stalk.infra.jpa.repository.TokenRepository;
 
@@ -55,11 +55,11 @@ public class MemberTokenControllerIntegTest extends IntegTest {
     }
 
     private void deleteToken(String email, String token) {
-        ResponseEntity<Void> response = deleteForEntityWithJwtToken(email,
-                                                                    deleteUrl(),
-                                                                    FireabseTokenDto.of(token),
-                                                                    Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        ResponseDto<Void> response = deleteForEntityWithJwtToken(email,
+                                                                 deleteUrl(),
+                                                                 FireabseTokenDto.of(token),
+                                                                 Void.class);
+        assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
     private String deleteUrl() {

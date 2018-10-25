@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import slipp.stalk.commoon.security.LoginUser;
 import slipp.stalk.controller.dto.CreateMemberDto;
 import slipp.stalk.controller.dto.MemberDto;
+import slipp.stalk.controller.dto.ResponseDto;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
 import slipp.stalk.domain.Member;
 import slipp.stalk.service.member.MemberService;
@@ -31,23 +32,23 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberDto> get(@LoginUser Member loginUser) {
+    public ResponseDto<MemberDto> get(@LoginUser Member loginUser) {
         Member member = memberService.get(loginUser.getId())
                                      .orElseThrow(MemberNotFoundException::new);
-        return ResponseEntity.ok(mapToMemberDto(member));
+        return ResponseDto.ok(mapToMemberDto(member));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@LoginUser Member loginUser) {
+    public ResponseDto<Void> delete(@LoginUser Member loginUser) {
         memberService.delete(loginUser.getId());
-        return ResponseEntity.noContent()
-                             .build();
+        return ResponseDto.noContent();
     }
 
     @PostMapping
-    public ResponseEntity<MemberDto> create(@RequestBody @Valid CreateMemberDto body) {
+    public ResponseEntity<ResponseDto<MemberDto>> create(@RequestBody @Valid CreateMemberDto body) {
+        // TODO : Using Hateoas
         MemberDto member = mapToMemberDto(memberService.create(mapToMember(body)));
-        return new ResponseEntity<>(member, member.makeHttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseDto.create(member, HttpStatus.OK), member.makeHttpHeaders(), HttpStatus.OK);
     }
 
     private Member mapToMember(CreateMemberDto body) {
