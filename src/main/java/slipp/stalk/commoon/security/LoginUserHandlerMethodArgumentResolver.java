@@ -70,7 +70,13 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
     private Member getMemberFromJwtToken(JwtToken token) {
         String email = jwtHelper.parseSubject(token);
+        // FIXME : 로그인 기능전까지는 기본 유저를 리턴하도록 구현
         return memberRepository.findByEmail(email)
+                               .orElse(defaultUser());
+    }
+
+    private Member defaultUser() {
+        return memberRepository.findById(1L)
                                .orElseThrow(MemberNotFoundException::new);
     }
 }

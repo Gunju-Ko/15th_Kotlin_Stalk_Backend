@@ -35,7 +35,7 @@ public class MemberControllerIntegTest extends IntegTest {
         assertThat(responseBody.getEmail()).isEqualTo(body.getEmail());
 
         deleteResource(email, path);
-        assertResult(email, path, ResponseDto.Result.FAIL);
+        assertUserIsNotExist(email, path);
     }
 
     @Test
@@ -56,9 +56,11 @@ public class MemberControllerIntegTest extends IntegTest {
         assertThat(response.getResult()).isEqualTo(ResponseDto.Result.SUCCESS);
     }
 
-    private void assertResult(String email, String path, ResponseDto.Result result) {
-        ResponseDto<MemberDto> response = getForEntityWithJwtToken(email, path, MemberDto.class);
-        assertThat(response.getResult()).isEqualTo(result);
+    private void assertUserIsNotExist(String email, String path) {
+        ResponseDto<MemberDto> response = getForEntityWithJwtToken(email,
+                                                                   path,
+                                                                   new ParameterizedTypeReference<ResponseDto<MemberDto>>() {});
+        assertThat(response.getData().getEmail().equals(email)).isFalse();
     }
 
     private CreateMemberDto createBody(String email) {
