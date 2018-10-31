@@ -8,7 +8,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import slipp.stalk.controller.exceptions.AccessDeniedException;
 import slipp.stalk.controller.exceptions.MemberNotFoundException;
-import slipp.stalk.controller.exceptions.UnAuthorizedException;
 import slipp.stalk.domain.Member;
 import slipp.stalk.infra.jpa.repository.MemberRepository;
 import slipp.stalk.service.security.JwtHelper;
@@ -54,10 +53,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             }
             return member;
         }
-        if (loginUser.required()) {
-            throw new UnAuthorizedException("You're required Login!");
-        }
-        return null;
+        // FIXME : 로그인 기능 구현 후 삭제
+//        if (loginUser.required()) {
+//            throw new UnAuthorizedException("You're required Login!");
+//        }
+        return defaultUser();
     }
 
     private JwtToken getJwtTokenFromRequest(NativeWebRequest webRequest) {
